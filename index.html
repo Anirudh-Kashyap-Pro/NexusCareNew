@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusCare — India Hospital Operations & Patient Journey Engine</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Sans Devanagari for clean Hindi typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="hospital-ambient-bg"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-wrapper" class="toast-container-bottom"></div>
+
+  <div id="app-container">
+
+    <!-- ==========================================================================
+         TOP HEADER: Brand, ABHA Status, Language Toggle, Role Selector
+         ========================================================================== -->
+    <header class="main-header">
+      <div class="brand-wrapper" data-tooltip="NexusCare: National Health Digital Infrastructure Engine">
+        <div class="brand-symbol">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+          </svg>
+        </div>
+        <div class="brand-text-col">
+          <div class="brand-name">
+            <span>NexusCare</span>
+            <span class="india-badge-strip">🇮🇳 ABHA Integrated</span>
+          </div>
+          <span class="brand-subtext" data-i18n="brand_sub">National Digital Health Grid • ABHA Integrated</span>
+        </div>
+      </div>
+
+      <div class="header-center-tools">
+        <!-- Bilingual Toggle Button -->
+        <button id="btn-lang-toggle" class="lang-toggle-btn" data-tooltip="Switch language between English and हिन्दी">
+          🌐 हिन्दी
+        </button>
+
+        <!-- Emergency 108 Red Trigger -->
+        <button id="btn-header-emergency" class="header-emergency-pill" data-tooltip="Emergency Code Red: Immediate triage and ambulance dispatch (108)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span data-i18n="emergency_btn">🚨 Emergency 108</span>
+        </button>
+      </div>
+
+      <!-- Role Selector Bar (Patient vs Staff vs Admin) -->
+      <div class="active-role-container">
+        <button class="role-chip active-patient" data-role="patient" data-tooltip="Patient Portal: View your personal step-by-step journey, token & body triage">
+          <span>👤 Patient</span>
+        </button>
+        <button class="role-chip" data-role="staff" data-tooltip="Doctor / Nurse Console: Call tokens, prescribe medicines & manage OPD queues">
+          <span>👨‍⚕️ Staff</span>
+        </button>
+        <button class="role-chip" data-role="admin" data-tooltip="Medical Superintendent: Master hospital bed capacity, quota balancer & grievance tasks">
+          <span>🏥 Admin</span>
+        </button>
+        <button id="open-login-modal" class="login-modal-trigger" data-tooltip="Switch accounts or login with custom ABHA / Staff ID">
+          <span>🔑 Login</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==========================================================================
+         ROLE 1: PUBLIC / PATIENT EXPERIENCE ("One Patient, One Journey")
+         ========================================================================== -->
+    <main id="patient-role-view" class="view-wrapper">
+      
+      <!-- Patient Welcome & ABHA Health Card Card -->
+      <div class="patient-welcome-card">
+        <div class="patient-profile-info">
+          <div class="patient-avatar-box">RK</div>
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--teal-700); text-transform: uppercase; letter-spacing: 0.05em;">
+              One Patient, One Journey
+            </div>
+            <h1 id="patient-name-display" class="patient-meta-name">Ramesh Kumar</h1>
+            <div class="patient-abha-id">
+              <span>ABHA ID:</span>
+              <span class="abha-pill">91-4820-1928-4011</span>
+              <span style="display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: var(--mint-600); margin-left: 6px;">
+                ✓ PMJAY Verified
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+          <button id="share-token-whatsapp" class="lang-toggle-btn" style="background: #25d366; color: #ffffff; border: none;" data-tooltip="Share token receipt slip and live queue tracker to WhatsApp">
+            📲 Share to WhatsApp
+          </button>
+          <div style="text-align: right; background: #ffffff; padding: 0.6rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+            <div style="font-size: 0.72rem; color: var(--text-light);">Current Assigned OPD</div>
+            <strong style="color: var(--teal-800); font-size: 0.95rem;">Cardiology • Room 204</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Predictive Crowd & Arrival Time Optimization Banner -->
+      <div class="crowd-prediction-banner" data-tooltip="AI queue pattern intelligence predicting the least crowded time to visit">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+            🕒
+          </div>
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--blue-700); text-transform: uppercase;">
+              Predictive Crowd Intelligence & Best Arrival Time
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);" data-i18n="crowd_advice">
+              Recommended arrival: 10:45 AM. Currently OPD footfall is nominal (Wait time ~9 mins).
+            </div>
+          </div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-light); display: block;">Current OPD Congestion</span>
+          <span class="crowd-stat-val">Low (28% Busy)</span>
+        </div>
+      </div>
+
+      <!-- "One Patient, One Journey" 6-Step Interactive Lifecycle -->
+      <section class="journey-timeline-card">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-main-heading">
+              <span>📍</span>
+              <span data-i18n="journey_title">One Patient, One Journey</span>
+            </h2>
+            <span style="font-size: 0.82rem; color: var(--text-light);" data-i18n="journey_sub">
+              Real-time guidance from hospital entry to pharmacy discharge
+            </span>
+          </div>
+          <span class="badge" style="background: var(--teal-100); color: var(--teal-800); font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 99px;">
+            Step 3 of 6 Active Now
+          </span>
+        </div>
+
+        <div class="journey-step-bar">
+          <!-- Step 1: Entry -->
+          <div class="journey-step-node completed" data-step="1" data-tooltip="Hospital security and thermal screening completed at Main Gate 1">
+            <div class="journey-step-number">✓</div>
+            <div class="journey-step-title" data-i18n="step1">Entry & Screening</div>
+            <span class="journey-step-sub">Gate 1 • Done</span>
+          </div>
+
+          <!-- Step 2: ABHA Reg -->
+          <div class="journey-step-node completed" data-step="2" data-tooltip="ABHA ID 91-4820 verified with Ayushman Bharat digital grid">
+            <div class="journey-step-number">✓</div>
+            <div class="journey-step-title" data-i18n="step2">ABHA Registration</div>
+            <span class="journey-step-sub">Kiosk A • Done</span>
+          </div>
+
+          <!-- Step 3: Doctor Consultation (Active) -->
+          <div class="journey-step-node active-now" data-step="3" data-tooltip="Currently waiting outside Room 204. Dr. Priya Nair is consulting.">
+            <div class="journey-step-number">3</div>
+            <div class="journey-step-title" data-i18n="step3">Doctor Consultation</div>
+            <span class="journey-step-sub" style="color: var(--saffron-700); font-weight: 700;">Room 204 • Next Up</span>
+          </div>
+
+          <!-- Step 4: Lab & Diagnostics -->
+          <div class="journey-step-node" data-step="4" data-tooltip="Diagnostic blood tests and ECG ordered; reports will upload to ABHA">
+            <div class="journey-step-number">4</div>
+            <div class="journey-step-title" data-i18n="step4">Lab & Diagnostics</div>
+            <span class="journey-step-sub">Lab 3 • Scheduled</span>
+          </div>
+
+          <!-- Step 5: Pharmacy Dispense -->
+          <div class="journey-step-node" data-step="5" data-tooltip="Medications will be packed at Pradhan Mantri Janaushadhi Counter 2">
+            <div class="journey-step-number">5</div>
+            <div class="journey-step-title" data-i18n="step5">Pharmacy Dispense</div>
+            <span class="journey-step-sub">Counter 2 • Queued</span>
+          </div>
+
+          <!-- Step 6: Discharge -->
+          <div class="journey-step-node" data-step="6" data-tooltip="Electronic prescription and follow-up consultation in 14 days">
+            <div class="journey-step-number">6</div>
+            <div class="journey-step-title" data-i18n="step6">Discharge & Review</div>
+            <span class="journey-step-sub">Exit Gate • Digital</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Patient Hub: Left Triage & Tokens, Right Indoor Map & Grievance -->
+      <div class="patient-hub-grid">
+        
+        <!-- Left Column -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Live Token Status Card -->
+          <div class="hub-card" data-tooltip="Real-time digital token status. Live ahead-in-queue counter">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-light); font-weight: 700;">Live Appointment Token</span>
+                <div style="font-size: 2.2rem; font-weight: 900; font-family: var(--font-mono); color: var(--teal-800); line-height: 1.1;">
+                  AIIMS-CARD-104
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span class="badge" style="background: var(--saffron-100); color: var(--saffron-700); font-weight: 700; font-size: 0.78rem; padding: 4px 10px; border-radius: 99px;">
+                  Online Booking
+                </span>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Dr. Priya Nair (MD)</div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 0.75rem; background: var(--bg-surface-alt); padding: 1rem; border-radius: var(--radius-md);">
+              <div>
+                <span style="font-size: 0.72rem; color: var(--text-light);" data-i18n="token_ahead">Patients Ahead</span>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--saffron-600);">2</div>
+              </div>
+              <div>
+                <span style="font-size: 0.72rem; color: var(--text-light);" data-i18n="token_est_time">Est. Consultation</span>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--teal-700);">~9 mins</div>
+              </div>
+              <div>
+                <span style="font-size: 0.72rem; color: var(--text-light);" data-i18n="token_room">Consultation Room</span>
+                <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">Room 204 (Fl. 2)</div>
+              </div>
+            </div>
+
+            <!-- Lab & Pharmacy Live Readiness Badges -->
+            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--teal-50); border: 1px solid var(--teal-200); border-radius: var(--radius-md);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; color: var(--teal-800);">
+                  <span>🧪</span>
+                  <span>Blood Lab Report (CBC & Lipid): READY for Doctor</span>
+                </div>
+                <span class="badge" style="background: var(--teal-600); color: #ffffff; font-size: 0.7rem; padding: 2px 8px; border-radius: 99px;">Uploaded</span>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--saffron-50); border: 1px solid var(--saffron-200); border-radius: var(--radius-md);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; color: var(--saffron-800);">
+                  <span>💊</span>
+                  <span>Pharmacy Counter 2: Janaushadhi Kendra Ready</span>
+                </div>
+                <span class="badge" style="background: var(--saffron-500); color: #ffffff; font-size: 0.7rem; padding: 2px 8px; border-radius: 99px;">Awaiting Doctor Sign</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Virtual Human Anatomy & Indian Symptom Triage -->
+          <section id="patient-anatomy-section" class="hub-card">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);" data-i18n="anatomy_title">
+                🫀 Interactive Body Symptom Checker
+              </h3>
+              <span style="font-size: 0.8rem; color: var(--text-light);" data-i18n="anatomy_sub">
+                Click where it hurts on the anatomical model to find the correct department
+              </span>
+            </div>
+
+            <div class="anatomy-triage-container">
+              <!-- Left: Interactive Vector Anatomy -->
+              <div class="anatomy-model-box">
+                <svg class="body-svg-canvas" viewBox="0 0 240 400">
+                  <!-- Head -->
+                  <circle data-zone="head" class="body-zone-interactive" cx="120" cy="40" r="28"/>
+                  <text x="120" y="44" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle" pointer-events="none">Head</text>
+
+                  <!-- Throat / ENT -->
+                  <rect data-zone="throat" class="body-zone-interactive" x="108" y="72" width="24" height="18" rx="4"/>
+                  
+                  <!-- Chest / Heart -->
+                  <path data-zone="chest" class="body-zone-interactive active-selected" d="M 85 95 C 100 90, 140 90, 155 95 L 158 150 C 135 155, 105 155, 82 150 Z"/>
+                  <text x="120" y="125" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle" pointer-events="none">Chest</text>
+
+                  <!-- Abdomen -->
+                  <path data-zone="abdomen" class="body-zone-interactive" d="M 84 154 C 105 158, 135 158, 156 154 L 150 210 C 130 215, 110 215, 90 210 Z"/>
+                  <text x="120" y="185" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle" pointer-events="none">Abdomen</text>
+
+                  <!-- Spine / Back -->
+                  <rect data-zone="spine" class="body-zone-interactive" x="114" y="95" width="12" height="110" rx="3"/>
+
+                  <!-- Knees & Legs -->
+                  <path data-zone="knees" class="body-zone-interactive" d="M 90 220 L 80 320 L 76 380 L 96 380 L 102 320 L 110 220 Z M 130 220 L 138 320 L 144 380 L 164 380 L 160 320 L 150 220 Z"/>
+                  <text x="120" y="310" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle" pointer-events="none">Joints</text>
+                </svg>
+                <span style="font-size: 0.72rem; color: var(--text-light); margin-top: 4px;">Click on Head, Chest, Abdomen, or Joints</span>
+              </div>
+
+              <!-- Right: Indian Triage Diagnosis Panel -->
+              <div class="triage-symptom-details">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <h4 id="selected-zone-name" style="font-size: 1.1rem; font-weight: 800; color: var(--teal-800);">
+                    Chest & Heart (छाती एवं हृदय)
+                  </h4>
+                  <span id="triage-severity-badge" class="badge" style="background: var(--rose-100); color: var(--rose-700); border: 1px solid var(--rose-500); font-weight: 700; font-size: 0.75rem; padding: 3px 8px; border-radius: 99px;">
+                    🚨 Level 1: Urgent (तत्काल)
+                  </span>
+                </div>
+
+                <!-- Pain Scale Slider -->
+                <div class="pain-scale-strip">
+                  <span style="font-size: 0.78rem; font-weight: 700;">Pain Severity:</span>
+                  <input type="range" id="patient-pain-slider" min="1" max="10" value="7" style="flex: 1; accent-color: var(--teal-600);">
+                  <strong id="patient-pain-val-display" style="color: var(--rose-600); font-size: 0.85rem;">7/10</strong>
+                </div>
+
+                <!-- Symptom tags -->
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 4px;">Reported Symptoms:</span>
+                  <div id="zone-symptoms-chips" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+                </div>
+
+                <!-- Recommendation summary -->
+                <div style="background: var(--teal-50); border: 1px solid var(--teal-200); padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: var(--text-light);">Recommended Dept:</span>
+                    <strong id="triage-recommended-dept" style="color: var(--teal-800);">Cardiology & CCU (Room 204)</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: var(--text-light);">Doctor on Duty:</span>
+                    <strong id="triage-on-duty-doc">Dr. Priya Nair</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-light);">Est. Wait Time:</span>
+                    <strong id="triage-est-wait" style="color: var(--mint-600);">Immediate / 2 mins</strong>
+                  </div>
+                </div>
+
+                <button class="call-next-hero-btn" style="padding: 0.65rem;" onclick="showToast('✅ Priority Token Issued for Cardiology Room 204. Proceed to Lift B.')">
+                  🎟️ Book Immediate Token for This Dept
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column: Hospital Indoor Map & Anonymous Grievance -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Hospital 2D / 3D Indoor Navigation Map -->
+          <section id="hospital-map-section" class="map-view-box">
+            <div class="map-controls-row">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">
+                  🗺️ Indoor Architectural Navigation
+                </h3>
+                <span id="map-floor-subtitle" style="font-size: 0.78rem; color: var(--teal-700); font-weight: 600;">
+                  Floor 2: Cardiology Suite, Cath Lab & Daycare Wards
+                </span>
+              </div>
+              <div style="display: flex; gap: 0.45rem;">
+                <button id="btn-toggle-3d-map" class="lang-toggle-btn" data-tooltip="Switch perspective between Architectural 2D and Isometric 3D">
+                  View in Isometric 3D
+                </button>
+              </div>
+            </div>
+
+            <!-- Floor tabs -->
+            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.75rem;">
+              <button class="map-floor-btn" data-floor="1">Floor 1 (ER / Lab)</button>
+              <button class="map-floor-btn active" data-floor="2">Floor 2 (Cardiology)</button>
+              <button class="map-floor-btn" data-floor="3">Floor 3 (ICU)</button>
+              <button class="map-floor-btn" data-floor="4">Floor 4 (Suites)</button>
+            </div>
+
+            <!-- SVG Blueprint Canvas -->
+            <div id="hospital-floor-svg-wrap"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-light);">
+              <span>♿ Wheelchair accessible via Lift Core B (Elevator 2)</span>
+              <strong style="color: var(--teal-700);">Distance: 45m • 1 min walk</strong>
+            </div>
+          </section>
+
+          <!-- Anonymous AI Grievance & Service Recovery Form -->
+          <section id="grievance-section" class="hub-card">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);" data-i18n="grievance_title">
+                📢 AI Grievance & Service Recovery Center
+              </h3>
+              <span style="font-size: 0.8rem; color: var(--text-light);">
+                Report cleanliness, staff delays, or facility issues anonymously. AI assigns a 15-minute resolution SLA to hospital admin.
+              </span>
+            </div>
+
+            <form id="anonymous-grievance-form" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div>
+                <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">
+                  What issue did you experience?
+                </label>
+                <input type="text" id="grievance-desc-input" class="lang-toggle-btn" style="width: 100%; text-align: left; background: #ffffff; color: var(--text-main);" placeholder="e.g. Wheelchair missing at entrance, or washroom needs cleaning" required>
+              </div>
+
+              <div>
+                <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">
+                  Location / Room:
+                </label>
+                <input type="text" id="grievance-location-input" class="lang-toggle-btn" style="width: 100%; text-align: left; background: #ffffff; color: var(--text-main);" placeholder="e.g. Near Room 204, Floor 2 Corridor" required>
+              </div>
+
+              <button type="submit" class="lang-toggle-btn" style="background: var(--rose-600); color: #ffffff; border: none; justify-content: center; padding: 0.7rem;" data-tooltip="Submit grievance anonymously without sharing your name or contact">
+                🔒 Submit Anonymous Grievance (15-min SLA)
+              </button>
+            </form>
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- ==========================================================================
+         ROLE 2: HOSPITAL STAFF EXPERIENCE (Doctor & OPD Console)
+         ========================================================================== -->
+    <main id="staff-role-view" class="view-wrapper hidden">
+      <div class="staff-console-header">
+        <div>
+          <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9;">
+            OPD Doctor Console • Room 204
+          </span>
+          <h1 style="font-size: 1.6rem; font-weight: 800;">Dr. Priya Nair (MD Cardiology)</h1>
+          <span style="font-size: 0.85rem; opacity: 0.9;">Shift Active • 24 Appointments Today • 18 Completed</span>
+        </div>
+        <div style="display: flex; gap: 0.65rem;">
+          <button id="btn-flex-offline-seat" class="lang-toggle-btn" style="background: #ffffff; color: var(--blue-700);" data-tooltip="If offline walk-in queue is empty, release 1 reserved slot to online booking pool">
+            🔄 Flex 1 Walk-in Slot to Online
+          </button>
+        </div>
+      </div>
+
+      <div class="staff-grid">
+        <!-- Next Patient Caller Card -->
+        <div class="staff-queue-card">
+          <div style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Currently In Consultation</div>
+          <div id="staff-current-serving-id" style="font-size: 2.8rem; font-weight: 900; font-family: var(--font-mono); color: var(--teal-800); line-height: 1.1; margin: 0.25rem 0;">
+            AIIMS-CARD-103
+          </div>
+          <div id="staff-current-serving-name" style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.25rem;">
+            Suresh Verma (Online Booking • ABHA 91-8841)
+          </div>
+
+          <button id="btn-call-next-patient" class="call-next-hero-btn" data-tooltip="Plays 4-tone hospital chime and announces patient name over bilingual voice speaker">
+            📢 <span data-i18n="call_patient">Call Next Patient (अगले मरीज को बुलाएं)</span>
+          </button>
+
+          <!-- Quick Prescription Generator -->
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1rem;">
+            <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Digital Rx Prescription Quick-Sign</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <input type="text" class="lang-toggle-btn" style="width: 100%; text-align: left; background: var(--bg-surface-alt);" value="Tab. Atorvastatin 20mg (1 OD) - Janaushadhi generic">
+              <input type="text" class="lang-toggle-btn" style="width: 100%; text-align: left; background: var(--bg-surface-alt);" value="Tab. Ecosprin 75mg (1 OD after meals)">
+              <button class="lang-toggle-btn" style="background: var(--teal-700); color: #ffffff; border: none; justify-content: center;" onclick="showToast('Prescription signed and pushed to Central Pharmacy Counter 2!')">
+                ✓ Sign & Push to Pharmacy Counter 2
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Queue Table -->
+        <div class="staff-queue-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Waiting Queue (Room 204)</h3>
+            <span class="badge" style="background: var(--teal-100); color: var(--teal-800); font-weight: 700; font-size: 0.75rem;">
+              3 Patients Remaining
+            </span>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="text-align: left; color: var(--text-light); border-bottom: 1px solid var(--border-light);">
+                <th style="padding: 0.5rem;">Token ID</th>
+                <th>Patient Name</th>
+                <th>Channel</th>
+                <th>Wait</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="staff-queue-tbody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==========================================================================
+         ROLE 3: ADMIN & OPERATIONS CENTER (Medical Superintendent)
+         ========================================================================== -->
+    <main id="admin-role-view" class="view-wrapper hidden">
+      <div class="admin-command-bar">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--teal-700); text-transform: uppercase;">
+              Hospital Command & Control • AIIMS New Delhi Grid
+            </span>
+            <h1 style="font-size: 1.6rem; font-weight: 800;">Dr. V. K. Paul (Medical Superintendent)</h1>
+          </div>
+          <div style="display: flex; gap: 0.65rem;">
+            <button id="btn-trigger-surge" class="lang-toggle-btn" style="background: var(--rose-600); color: #ffffff; border: none;" data-tooltip="Activate mass-casualty emergency protocol: converts step-down beds to trauma care">
+              🚨 Trigger Code Orange Surge
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-kpi-row">
+          <div class="admin-kpi-card" data-tooltip="Real-time occupancy across General, Step-down, and ICU wards">
+            <span style="font-size: 0.75rem; color: var(--text-light); font-weight: 700;">Total Bed Capacity</span>
+            <div class="admin-kpi-val">2,125 Beds</div>
+            <span style="font-size: 0.78rem; color: var(--teal-700); font-weight: 700;">● 78% Occupied (467 Free)</span>
+          </div>
+
+          <div class="admin-kpi-card" data-tooltip="ICU bed occupancy under National Critical Care Grid">
+            <span style="font-size: 0.75rem; color: var(--text-light); font-weight: 700;">Critical ICU Beds</span>
+            <div class="admin-kpi-val">42 Beds</div>
+            <span style="font-size: 0.78rem; color: var(--rose-600); font-weight: 700;">● 92% Occupied (3 Free)</span>
+          </div>
+
+          <div class="admin-kpi-card" data-tooltip="Total outpatient registrations processed today">
+            <span style="font-size: 0.75rem; color: var(--text-light); font-weight: 700;">OPD Footfall Today</span>
+            <div class="admin-kpi-val">1,420 Patients</div>
+            <span style="font-size: 0.78rem; color: var(--saffron-700); font-weight: 700;">● 58% Online / 42% Offline</span>
+          </div>
+
+          <div class="admin-kpi-card" data-tooltip="Ayushman Bharat PM-JAY digital cashless claims settled today">
+            <span style="font-size: 0.75rem; color: var(--text-light); font-weight: 700;">PMJAY Claims Settled</span>
+            <div class="admin-kpi-val">₹4.82 Lakh</div>
+            <span style="font-size: 0.78rem; color: var(--mint-600); font-weight: 700;">● 100% Cashless Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Walk-in & Online Slot Auto-Flex Balancer -->
+      <section id="quota-balancer-section" class="quota-balancer-card" data-tooltip="Intelligent quota allocation preventing crowded waiting rooms while protecting rural offline walk-ins">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);" data-i18n="quota_balancer">
+              ⚖️ Smart Walk-in & Online Slot Auto-Flex Balancer
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--text-light);">
+              If rural offline walk-in footfall is low at 11 AM, unused physical tokens automatically convert to online booking seats.
+            </span>
+          </div>
+          <span class="badge" style="background: var(--teal-100); color: var(--teal-800); font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 99px;">
+            AI Dynamic Auto-Flex ACTIVE
+          </span>
+        </div>
+
+        <div class="slider-visual-track">
+          <div id="slider-chunk-online" class="slider-chunk-online" style="width: 60%;">60% Online</div>
+          <div id="slider-chunk-offline" class="slider-chunk-offline" style="width: 40%;">40% Walk-in</div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <input type="range" id="quota-flex-range" min="20" max="80" value="60" style="flex: 1; accent-color: var(--teal-700);">
+          <div style="display: flex; gap: 1rem; font-size: 0.85rem; font-weight: 700;">
+            <span style="color: var(--teal-800);">Online: <span id="quota-online-val">60% (510 slots)</span></span>
+            <span style="color: var(--saffron-700);">Walk-in: <span id="quota-offline-val">40% (340 slots)</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Grievance & Service Recovery Ticket Board -->
+      <section class="hub-card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">
+              🎯 Active AI Grievances & Service Recovery Tasks
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--text-light);">
+              Every anonymous patient complaint automatically turns into a prioritized task with an SLA timer.
+            </span>
+          </div>
+        </div>
+
+        <div id="grievance-tasks-grid" class="grievance-board-grid">
+          <!-- Dynamically rendered -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================================================
+         VOICE-FIRST FLOATING ASSISTANT FOR NON-TECH / ILLITERATE PATIENTS
+         ========================================================================== -->
+    <div class="floating-voice-widget">
+      <div id="voice-hint-badge" class="voice-hint-badge">
+        <span>🎙️</span>
+        <span id="voice-hint-text" data-i18n="voice_hint">Tap to Speak (Voice Assistant)</span>
+      </div>
+      <button id="floating-voice-mic" class="voice-mic-btn" data-tooltip="Speak in Hindi or English: 'Where is Cardiology room 204?'">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+    </div>
+
+    <!-- ==========================================================================
+         FIXED HORIZONTAL BOTTOM NAVIGATION DOCK
+         ========================================================================== -->
+    <nav class="horizontal-dock">
+      <!-- Injected dynamically per active role -->
+    </nav>
+
+    <!-- ==========================================================================
+         MODAL 1: MULTI-ROLE LOGIN SELECTOR
+         ========================================================================== -->
+    <div id="login-modal-overlay" class="modal-overlay hidden">
+      <div class="modal-content-card">
+        <button id="close-login-modal" class="modal-close-btn">✕</button>
+        <h2 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 0.25rem;">NexusCare Indian Healthcare Login</h2>
+        <span style="font-size: 0.82rem; color: var(--text-light); display: block; margin-bottom: 1.25rem;">
+          Select your persona to explore role-specific hospital views:
+        </span>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- Card 1: Patient -->
+          <div class="demo-login-card lang-toggle-btn" data-role="patient" style="text-align: left; background: var(--teal-50); border: 1px solid var(--teal-200); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 1.3rem;">👤</div>
+            <div style="flex: 1;">
+              <strong style="color: var(--teal-800); display: block;">Ramesh Kumar (Patient)</strong>
+              <span style="font-size: 0.75rem; color: var(--text-light);">ABHA ID: 91-4820 • Token AIIMS-CARD-104 • Cardiology Journey</span>
+            </div>
+            <span class="badge" style="background: var(--teal-600); color: #fff; font-size: 0.7rem;">Login</span>
+          </div>
+
+          <!-- Card 2: Staff -->
+          <div class="demo-login-card lang-toggle-btn" data-role="staff" style="text-align: left; background: var(--blue-50); border: 1px solid var(--blue-100); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 1.3rem;">👨‍⚕️</div>
+            <div style="flex: 1;">
+              <strong style="color: var(--blue-700); display: block;">Dr. Priya Nair (Staff / Doctor)</strong>
+              <span style="font-size: 0.75rem; color: var(--text-light);">MD Cardiology • Room 204 • Queue Caller & Prescription Desk</span>
+            </div>
+            <span class="badge" style="background: var(--blue-600); color: #fff; font-size: 0.7rem;">Login</span>
+          </div>
+
+          <!-- Card 3: Admin -->
+          <div class="demo-login-card lang-toggle-btn" data-role="admin" style="text-align: left; background: var(--saffron-50); border: 1px solid var(--saffron-200); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 1.3rem;">🏥</div>
+            <div style="flex: 1;">
+              <strong style="color: var(--saffron-800); display: block;">Dr. V. K. Paul (Medical Superintendent)</strong>
+              <span style="font-size: 0.75rem; color: var(--text-light);">Hospital Operations Director • Capacity & Grievance Manager</span>
+            </div>
+            <span class="badge" style="background: var(--saffron-600); color: #fff; font-size: 0.7rem;">Login</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 2: EMERGENCY CODE RED MODAL
+         ========================================================================== -->
+    <div id="emergency-action-modal" class="modal-overlay hidden">
+      <div class="modal-content-card" style="border-top: 6px solid var(--rose-600);">
+        <button id="close-emergency-modal" class="modal-close-btn">✕</button>
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--rose-600); margin-bottom: 0.5rem;">
+          <span style="font-size: 1.5rem;">🚨</span>
+          <h2 style="font-size: 1.35rem; font-weight: 800;">Emergency Code Red Action</h2>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          For acute emergencies (cardiac arrest, trauma, severe hemorrhage), bypass normal OPD queues immediately.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+          <button class="call-next-hero-btn" style="background: var(--rose-600);" onclick="showToast('🚨 Code Red Token Dispatched to Emergency Bay 01. Stretcher team alert!'); document.getElementById('emergency-action-modal').classList.add('hidden');">
+            🚑 Dispatch Ambulance Bay 1 Stretcher
+          </button>
+          <a href="tel:108" class="lang-toggle-btn" style="justify-content: center; background: var(--bg-surface-alt); text-decoration: none;">
+            📞 Call National Emergency Hotline 108
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

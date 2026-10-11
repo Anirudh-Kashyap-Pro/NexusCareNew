@@ -1,0 +1,1049 @@
+/* ==========================================================================
+   NexusCare - India Healthcare Operations & Patient Journey Engine
+   Design System: Bright, Inviting, Vibrant Hospital Palette (Teal, Saffron, Sapphire & Rose)
+   Specifically designed for Indian patients, staff, and hospital administrators.
+   ========================================================================== */
+
+:root {
+  /* Vibrant & Welcoming Color System */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f1f5f9;
+  --bg-surface-tint: #f0fdfa;
+  
+  /* Primary Clinical Teal (Trust & Healing) */
+  --teal-50: #f0fdfa;
+  --teal-100: #ccfbf1;
+  --teal-200: #99f6e4;
+  --teal-400: #2dd4bf;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
+  --teal-800: #115e59;
+  --teal-glow: rgba(13, 148, 136, 0.18);
+
+  /* Indian Saffron & Warm Amber (Hospitality & Energy) */
+  --saffron-50: #fffbeb;
+  --saffron-100: #fef3c7;
+  --saffron-200: #fde68a;
+  --saffron-400: #fbbf24;
+  --saffron-500: #f59e0b;
+  --saffron-600: #d97706;
+  --saffron-700: #b45309;
+
+  /* Royal Clinical Sapphire Blue (Diagnostic & Authority) */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+
+  /* Emergency Crimson & Coral Rose (Code Red & Alerts) */
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --rose-glow: rgba(225, 29, 72, 0.2);
+
+  /* Healing Emerald Mint (Readiness & Low Crowding) */
+  --mint-50: #ecfdf5;
+  --mint-100: #d1fae5;
+  --mint-500: #10b981;
+  --mint-600: #059669;
+
+  /* Text & Neutral Hierarchy */
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  --text-inverse: #ffffff;
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-teal: rgba(13, 148, 136, 0.25);
+
+  /* Elevation Shadows */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px -1px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 18px -3px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 14px 34px -4px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  --shadow-teal: 0 6px 20px -2px var(--teal-glow);
+  --shadow-rose: 0 6px 20px -2px var(--rose-glow);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* Font Stacks */
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Warm Ambient Background Pattern */
+.hospital-ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(20, 184, 166, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, var(--bg-app) 100%);
+}
+
+#app-container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding-bottom: 96px; /* Space for horizontal dock */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Utility Classes */
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn var(--transition-normal) forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Long-Hover Tooltip System ("Every feature has a description if hovered")
+   ========================================================================== */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 12px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  white-space: normal;
+  max-width: 250px;
+  width: max-content;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s 0.6s ease, transform 0.2s 0.6s ease; /* 600ms long-hover threshold */
+  z-index: 1000;
+  line-height: 1.35;
+}
+
+[data-tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   Top Header Navigation & Role Badge Bar
+   ========================================================================== */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.65rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.brand-symbol {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--teal-600), var(--blue-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 14px var(--teal-glow);
+}
+
+.brand-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--teal-800);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand-subtext {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* ABHA & Ayushman Bharat Ribbon */
+.india-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--saffron-50);
+  border: 1px solid var(--saffron-200);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  color: var(--saffron-700);
+  font-weight: 600;
+}
+
+.header-center-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Language Toggle: English <-> हिन्दी */
+.lang-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: var(--teal-50);
+  border: 1px solid var(--teal-200);
+  color: var(--teal-800);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lang-toggle-btn:hover {
+  background: var(--teal-100);
+}
+
+/* Emergency Red Trigger Button */
+.header-emergency-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--rose-50);
+  border: 1px solid var(--rose-500);
+  color: var(--rose-700);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  animation: pulseEmergency 2s infinite ease-in-out;
+  box-shadow: 0 2px 10px var(--rose-glow);
+}
+
+@keyframes pulseEmergency {
+  0%, 100% { border-color: var(--rose-500); }
+  50% { border-color: #f43f5e; box-shadow: 0 0 16px var(--rose-glow); }
+}
+
+/* Role Selector Pill */
+.active-role-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  padding: 0.25rem 0.4rem;
+  border-radius: var(--radius-pill);
+}
+
+.role-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.role-chip:hover {
+  color: var(--text-main);
+  background: var(--bg-surface-alt);
+}
+
+.role-chip.active-patient {
+  background: var(--teal-600);
+  color: #ffffff;
+  box-shadow: 0 2px 8px var(--teal-glow);
+}
+
+.role-chip.active-staff {
+  background: var(--blue-600);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.role-chip.active-admin {
+  background: var(--saffron-600);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+}
+
+.login-modal-trigger {
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-medium);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Voice-First Floating Indian Hospital Assistant
+   ========================================================================== */
+.floating-voice-widget {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.5rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.voice-mic-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-700));
+  border: 3px solid #ffffff;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.35);
+  transition: transform var(--transition-normal);
+}
+
+.voice-mic-btn:hover {
+  transform: scale(1.08);
+}
+
+.voice-mic-btn.listening {
+  background: linear-gradient(135deg, var(--rose-600), var(--rose-700));
+  animation: pulseVoice 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseVoice {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
+  50% { transform: scale(1.12); box-shadow: 0 0 0 16px rgba(225, 29, 72, 0); }
+}
+
+.voice-hint-badge {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--teal-800);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ==========================================================================
+   Role 1: Public / Patient Experience ("One Patient, One Journey")
+   ========================================================================== */
+.view-wrapper {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.patient-welcome-card {
+  background: linear-gradient(135deg, #ffffff 0%, var(--teal-50) 100%);
+  border: 1px solid var(--teal-200);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.patient-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.patient-avatar-box {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--saffron-400), var(--saffron-600));
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+}
+
+.patient-meta-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.patient-abha-id {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 2px;
+}
+
+.abha-pill {
+  background: #ffffff;
+  border: 1px solid var(--teal-600);
+  color: var(--teal-800);
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+/* "One Patient, One Journey" Interactive Timeline */
+.journey-timeline-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.section-main-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.journey-step-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.journey-step-node {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.journey-step-node.completed {
+  background: var(--teal-50);
+  border-color: var(--teal-600);
+}
+
+.journey-step-node.active-now {
+  background: #ffffff;
+  border: 2px solid var(--saffron-500);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+  transform: translateY(-2px);
+}
+
+.journey-step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--border-medium);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 0.45rem;
+}
+
+.journey-step-node.completed .journey-step-number {
+  background: var(--teal-600);
+}
+
+.journey-step-node.active-now .journey-step-number {
+  background: var(--saffron-500);
+  animation: pulseDot 2s infinite ease;
+}
+
+.journey-step-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.journey-step-sub {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Predictive Crowd & Best Time to Arrive Card */
+.crowd-prediction-banner {
+  background: linear-gradient(135deg, var(--blue-50), #ffffff);
+  border: 1px solid var(--blue-100);
+  border-left: 5px solid var(--blue-600);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.crowd-stat-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--blue-700);
+  line-height: 1;
+}
+
+/* Two Column Patient Hub */
+.patient-hub-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+}
+
+.hub-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ==========================================================================
+   Virtual Human Anatomy & Indian Symptom Navigator
+   ========================================================================== */
+.anatomy-triage-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.anatomy-model-box {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.body-svg-canvas {
+  width: 100%;
+  max-width: 250px;
+  height: 420px;
+}
+
+.body-zone-interactive {
+  fill: rgba(13, 148, 136, 0.15);
+  stroke: var(--teal-600);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.body-zone-interactive:hover {
+  fill: rgba(245, 158, 11, 0.35);
+  stroke: var(--saffron-600);
+}
+
+.body-zone-interactive.active-selected {
+  fill: rgba(225, 29, 72, 0.4);
+  stroke: var(--rose-600);
+  filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.3));
+}
+
+.triage-symptom-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pain-scale-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-surface-alt);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+/* ==========================================================================
+   Role 2: Hospital Staff Experience (OPD Doctor & Nurse Console)
+   ========================================================================== */
+.staff-console-header {
+  background: linear-gradient(135deg, var(--blue-600), var(--teal-700));
+  color: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+}
+
+.staff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 1.5rem;
+}
+
+.staff-queue-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.call-next-hero-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--saffron-500), var(--saffron-600));
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.28);
+  transition: transform var(--transition-fast);
+}
+
+.call-next-hero-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Role 3: Admin & Operations Command Center (Medical Superintendent)
+   ========================================================================== */
+.admin-command-bar {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.admin-kpi-card {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-kpi-val {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--teal-800);
+  line-height: 1.1;
+  margin: 0.35rem 0;
+}
+
+/* Smart Walk-in & Online Slot Auto-Flex Slider */
+.quota-balancer-card {
+  background: #ffffff;
+  border: 1px solid var(--teal-200);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.slider-visual-track {
+  display: flex;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin: 1rem 0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.slider-chunk-online {
+  background: var(--teal-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: width 0.3s ease;
+}
+
+.slider-chunk-offline {
+  background: var(--saffron-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: width 0.3s ease;
+}
+
+/* AI Grievance & Service Recovery Ticket Board */
+.grievance-board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.grievance-task-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--rose-500);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.grievance-task-card.sla-amber {
+  border-left-color: var(--saffron-500);
+}
+
+.grievance-task-card.resolved {
+  border-left-color: var(--mint-500);
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Interactive 3D / 2D Multi-Floor Hospital Map
+   ========================================================================== */
+.map-view-box {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.map-svg-container {
+  width: 100%;
+  height: 440px;
+  background: #f1f5f9;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  position: relative;
+}
+
+.map-corridor {
+  fill: #e2e8f0;
+}
+
+.map-room-tile {
+  fill: #ffffff;
+  stroke: var(--border-medium);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.map-room-tile:hover {
+  fill: var(--teal-50);
+  stroke: var(--teal-600);
+}
+
+.map-room-tile.target-destination {
+  fill: var(--saffron-100);
+  stroke: var(--saffron-600);
+  stroke-width: 2.5;
+}
+
+.map-route-tracer {
+  fill: none;
+  stroke: var(--teal-600);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 8 6;
+  animation: movePath 1.6s linear infinite;
+}
+
+@keyframes movePath {
+  to { stroke-dashoffset: -28; }
+}
+
+/* ==========================================================================
+   Fixed Bottom Navigation Dock
+   ========================================================================== */
+.horizontal-dock {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 0.75rem;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.14);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dock-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dock-pill-btn:hover {
+  color: var(--teal-800);
+  background: var(--teal-50);
+}
+
+.dock-pill-btn.active {
+  background: var(--teal-700);
+  color: #ffffff;
+  box-shadow: 0 4px 14px var(--teal-glow);
+}
+
+/* ==========================================================================
+   Modals & Login Overlays
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  max-width: 520px;
+  width: 100%;
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  animation: modalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface-alt);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toast Container */
+.toast-container-bottom {
+  position: fixed;
+  top: 4.8rem;
+  right: 1.5rem;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  pointer-events: none;
+}
+
+.toast-item {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--teal-600);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  box-shadow: var(--shadow-md);
+  min-width: 300px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: slideRight 0.3s ease;
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .journey-step-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .patient-hub-grid, .staff-grid, .anatomy-triage-container {
+    grid-template-columns: 1fr;
+  }
+  .horizontal-dock {
+    width: 95%;
+    padding: 0.35rem;
+    justify-content: space-around;
+  }
+  .dock-pill-btn span {
+    display: none;
+  }
+}
